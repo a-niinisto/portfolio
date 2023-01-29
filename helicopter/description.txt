@@ -1,0 +1,2 @@
+Helicopter was a hobby project of mine. It has a flying helicopter with certain flying physics (coded in helicopter class) and 
+I designed grapchical user interface for it. Helicopter is controlled by WASD.

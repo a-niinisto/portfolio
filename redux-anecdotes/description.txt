@@ -1,0 +1,3 @@
+Redux-anecdotes was a project from course Fullstack Open. It is a front-end for a web-page that allows users to upload their
+anecdotes and any user can give the anecdote a like. This project was meant to rehearse the usage of redux as way to manage
+the state of the front-end app. As a back-end this project uses JSON-Server.

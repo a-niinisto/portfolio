@@ -1,0 +1,7 @@
+This was a hobby project of mine. This program executes a game of sudoku and I have implemented a GUI for it.
+
+User can define the seed which will generate a sudoku board and user can specify how many numbers are shown to begin with. If 
+user wants to see the solution, they can press solve and solved sudoku board will be shown.
+
+If user choses seed to be 0, program will not generate a board but user can put numbers on the board. When user hits solve, the 
+program will give a solution to the sudoku board which was given by the user. 

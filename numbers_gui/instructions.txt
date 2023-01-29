@@ -1,0 +1,97 @@
+COMP.CS.110 Project 4: game 2048
+
+Säännöt ja käyttöohje:
+
+Ohjelma toteuttaa pelin 2048. Pelissä tarkoituksena on yhdistää laattoja, joissa on sama luku. Pelaaja siirtää
+kaikki laatat kerralla joko ylös, alas, vasemmalle tai oikealle ja tällöin mikäli on laattoja, jotka voivat
+yhdistyä (samat luvut) ne yhdistyvät ja syntyy uusi laatta, jonka arvo on kaksinkertainen edellisiin nähden.
+Peli päättyy, kun kaikki laatat ovat täynnä ja ei ole mahdollisia siirtoja tai kun pelaaja on saavuttanut
+tavoitearvon, joka on normaalisti 2048.
+
+Ennen pelin alkamista käyttäjän tulee asettaa arvot seedille, tavoitearvolle ja siirtomäärälle, jonka jälkeen
+käyttäjä voi poistaa numeron laudalta. Jos tavoitearvon jättää nollaksi, on tavoitearvo vakio 2048. Jos siirtomäärän
+jättää nollaksi, ei poisto mahdollisuutta tule ollenkaan. Peli aloitetaan painamalla ready-painiketta, minkä
+jälkeen pelikenttä luodaan. Pelissä numeroita liikutellaan wasd-näppäimillä.
+
+Kun valittu poiston siirtomäärä
+saavutetaan peli siirtyy poistotilaan, jolloin ruudulla vasemman yläkulman laatta muuttuu punaiseksi ilmaisten
+poistettavana olevan numeron. Poistettavana olevaa numeroa voi poistotilassa siirtää wasd-painikkeilla. Kun
+poistettavaksi haluttu laatta on punainen, niin enter-painikkeella saa poistettua numeron. Jos ei halua poistaa
+mitään voi valita poistettavaksi tyhjän laatan.
+
+Kun peli on päättynyt, tekstikenttään tulee tieto, oletko voittanut vai hävinnyt. Lisäksi taustaväri muuttuu
+vihräksi voittaessa ja punaiseksi hävitessä. Tämän jälkeen pelin voi aloittaa uudelleen painamalla reset-painiketta.
+Ennen resetoimista pelin parametrejä (seed, tavoitearvo ja poiston siirtomäärä) voidaan muuttaa. Resetoimisen
+voi tehdä myös pelin aikana.
+
+Pelin aikana ohjelma myös tulostaa pelaajan pisteet tekstikenttään ja ohjelma näyttää myös pelaajan käyttämän
+ajan laskurissa. Pelaaja voi pausettaa pelin painamalla pause-painiketta, jolloin laskuri pysähtyy ja peli ei
+vastaanota wasd-komentoja. Pause-tilan saa pois päältä painamalla unpause-painiketta.
+
+
+
+Ohjelman rakenne (pääpiirteittäin):
+
+Mainwindow-luokassa constructori luo peliruudukon, painonapit, lcdnumber-ruudut sekä tekstikentät.
+Peliruudukko talletetaan muuttujaan rectsLabels_, joka on vectori pareista, jotka sisältävät recitemin sekä sen
+sisällä olevan QLabelin. constructori myös alustaa gameboard_-attribuutin, joka gameboard luokan oliona
+sisältää tiedon pelistä ja suorittaa kaikki käyttöliittymän sille välittämät siirrot.
+
+onReady-metodi käsittelee pelin aloittamisen. Se täyttää peli ruudukon gameboardin fill-metodin avulla.
+
+keyPressEvent käsittelee pelin siirrot wasd-komentojen ja poistossa wasd- sekä enter-komentojen avulla.
+Siirtojen yhteydesssä keyPressEvent kutsuu updateScreen-metodia, joka taas vastaa
+
+onReset käsittelee pelin uudelleenaloittamisen. Se alustaa gameboardin uudestaan alusta ilman luomatta
+uusia numbertile-olioita. Tämä on toteutettu muuttamalla metodia fill (kuvattu gameboard-tiedostoissa). Tätä varten
+myös nummbertile-luokan metodia new_value on muokattu siten, että sillä on mahdollista muuttaa laatan nollaa
+suurempi numero nollaksi.
+
+Ongelman helppo ratkaisu:
+Käytetty kirjaimia wasd. Myös luotu ready- ja reset-nappula, joita tulee painaa spinboxien arvon muuttamisen
+jälkeen.
+
+
+Tehdyt lisäominaisuudet:
+
+Eri luvuilla eri värit:
+Toteutettu mainwindow-luokassa metodeissa findColour ja updateScreen. Toteutettu
+käyttäen enum Qt::GlobalColor värejä ruudun numeron logaritmien avulla.
+
+Pelissä on ajastin, joka kertoo siihen mennessä käytetyn ajan:
+Toteutettu QTimer timer_ -attribuutilla, joka antaa timeout-signaaleja sekunnin välein onTimeout-slotille, joka
+lisää int time_ -attribuuttia yhdellä merkitsee ajan kahteen lcdnumber-olioon.
+
+Siirtomäärän (M) jälkeen ohjelma poistaa pelistä käyttäjän määräämän luvun:
+Siirtomäärä kysytään moveCounterSpinBoxin avulla ja merkataan removalAt_-attribuuttiin. Kun siirtomäärä saavutetaan,
+keyPressEvent wasd:lla johtaa numberRemoval-metodiin, jossa Coords removable_ liikutetaan suuntiin wasd-käskyjen
+mukaisesti. Liikutettava removable kuvataan käyttöliittymässä punaisella värillä siten, että poistettavana oleva
+numero on aina punaisena. Poisto valinta toteutetaan painamalla enter-painiketta.
+
+Pelissä on jonkinlainen pistelasku, joka perustuu pelaajan taitavuuteen. Voit itse valita tavan laskea pisteitä:
+Pistelasku toteutettu luokassa gameboard. Metodi calculatePoints suoritetaan, joka siirron yhteydessä ja uudet
+pisteet talletetaan points_-attribuuttiin. Mainwindow-luokka pystyy hakemaan nämä pisteet gameboard-luokan
+getPoints-metodilla. Pisteet näytetään scoreTextBrowserissa.
+
+Lukujen siirtyminen ja uuden luvun ilmestyminen on toteutettu hidastetusti ilman kälin jähmettymistä:
+Toteutettu mainwindow-luokassa. Hidastus toteutetaan siten, että ensin tapahtuu siirto, minkä jälkeen
+kutsutaan updateScreen-metodia, joka päivittää käyttäjän näkemän näytön, minkä jälkeen kakkosen lisäys toteutetaan.
+Samalla QTimer delayTimer_ käynnistetään. Tämä kutsuu onDelay-metodia timeout-signaalin avulla ajan
+cons int DELAY päästä. Metodi onDelay pysäyttää delayTimer_-olion ja kutsuu updateScreen-metodin.
+
+Ohjelma ei salli tavoitteeksi muita kuin kakkosen potensseja:
+Toteutettu siten, että goalSpinBoxiin käyttäjä sijoittaa kakkosen eksponenttina tavoitteen.
+
+Käyttöliittymän taustaväri vaihtuu, kun pelaaja voittaa tai häviää:
+Toteutettu keyPressEvent-metodissa. Kun pelaajan siirto palauttaa gameboard-luokan metodissa move arvon true,
+taustaväri värjätään vihreäksi. Kun gameboard-luokan metodi isFull palauttaa arvon true, taustaväri
+värjätään punaiseksi. Kun käyttäjä painaa reset-painiketta, taustaväri palautetaan alkuperäiseksi metodissa
+onReset.
+
+Pelissä on pause-nappula, jolla ajanoton saa pysäytettyä, kun peli on käynnissä:
+Toteutettu mainwindow-luokassa. Kun pelaaja painaa pause-nappia, attribuutti gameStopped_ saa arvon true, jolloin
+metodi keyPressEvent palautuu aina heti kutsuttuaan ilman mitään muutosta gameboardiin. Tällöin myös timer_-olio
+pystäytetään. Lisäksi infoTextBrowseriin tulee ilmoitus pause-tilasta ja pause-painikkeeseen tulee teksti "Unpause".
+Kun pause painiketta painetaan pause-tilassa, gameStopped_ saa taas arvon false,
+jolloin keyPressEvent päästää kutsut loppuun asti, eikä palauta niitä heti. Tällöin myös timer_-olio käynnistetäänö.
+Lisäksi pause-tilasta kertova teksti poistuu ja pause-painikkeessa lukee taas "Pause".

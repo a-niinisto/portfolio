@@ -1,0 +1,4 @@
+Blogs is a program I made on course Fullstack Open. It executes a web page where user can upload their own blogs and other users
+have the possibility to give them a like. Blogs are uploaded to and downloaded from MongoDB database. Only users who have logged
+in can upload or like blogs. User information is also stored in MongoDB. Users have been manually added: sign up capability is yet
+to be implemented. Connection to the MongoDB is not possible without my password, so program cannot be executed properly.

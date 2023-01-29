@@ -1,0 +1,3 @@
+Numbers-gui executes a game of 2048. The graphical user interface was a project for course comp.cs.110 from Tampere University.
+I have only implemented the graphical user interface (files mainwindow.cpp and mainwindow.hh). Other have been coded by Tampere
+University and I have only made small changes in them (specified in the corresponding files).
